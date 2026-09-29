@@ -1,0 +1,3 @@
+﻿Build path: C:/Users/egora/OneDrive/Рабочий стол/RPG_Build
+Build number: 14
+PluginYG version: 2.0092

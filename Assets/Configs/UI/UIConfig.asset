@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49bcfb08f45b30419ae06cc0fda33f4, type: 3}
+  m_Name: UIConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.UI.UIConfig
+  <CanvasPrefab>k__BackingField: {fileID: 6403967409287477625, guid: 1379b9014c79b704ab793c6e6b5e62b1, type: 3}
+  <ContentPrefab>k__BackingField: {fileID: 1319885444866639477, guid: cc985fe94e2ed6b4bacd51a636356606, type: 3}
+  <MenuPagePrefab>k__BackingField: {fileID: 4140256525782164227, guid: 897e0da0828226b48a9d374ee311875e, type: 3}
+  <LevelPreparationPagePrefab>k__BackingField: {fileID: 4140256525782164227, guid: 351eb75c6e842094c82dfc950e16fa6f, type: 3}
+  <PlayPagePrefab>k__BackingField: {fileID: 4140256525782164227, guid: 8d4061f775f998f469497b187edcd786, type: 3}
+  <PausePagePrefab>k__BackingField: {fileID: 1204485311920450337, guid: 11130bf00a9af6e47a3083327975aa08, type: 3}
+  <VictoryPagePrefab>k__BackingField: {fileID: 1204485311920450337, guid: 3cf2fb1f4c89c7e4cb7e6b6b05d9bc89, type: 3}

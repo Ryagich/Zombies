@@ -1,0 +1,31 @@
+{
+    "name": "ZombiesInput",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "0df11c24-8e28-4781-8a24-86a809ff11ad",
+            "actions": [
+                { "name": "PointerPosition", "type": "PassThrough", "id": "b6cddeab-44aa-4ef2-8b5c-b3f7c66e9081", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "PointerDelta", "type": "PassThrough", "id": "3d8af8dd-7ce3-408b-a604-0246d3ffbf79", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "CameraDrag", "type": "Button", "id": "c336f2ea-2998-456a-9219-a5079f517906", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Pause", "type": "Button", "id": "d79be11d-393b-43f6-9ca7-27b32ff7911d", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "CameraKeyboardMove", "type": "Value", "id": "5f784e8a-20e0-49c3-bcdc-7fced9d04a31", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": false }
+            ],
+            "bindings": [
+                { "name": "", "id": "639c46f8-cf6c-4a24-b5a3-24812b95c0e7", "path": "<Pointer>/position", "interactions": "", "processors": "", "groups": "Keyboard&Mouse;Touch", "action": "PointerPosition", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "da899f41-6e31-4315-99b3-3e4b95e71642", "path": "<Pointer>/delta", "interactions": "", "processors": "", "groups": "Keyboard&Mouse;Touch", "action": "PointerDelta", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "938cc389-22f1-4460-8190-5f8b376b11c9", "path": "<Mouse>/leftButton", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraDrag", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "53ab3024-2fa1-4ef9-9a8b-a67bb2d71afd", "path": "<Keyboard>/escape", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Pause", "isComposite": false, "isPartOfComposite": false },
+                { "name": "2D Vector", "id": "8d0076b8-039f-4fca-a16a-2f96921eddb2", "path": "2DVector", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraKeyboardMove", "isComposite": true, "isPartOfComposite": false },
+                { "name": "up", "id": "8d7b0ed2-13dd-4e09-bcc2-b91f4dcd56c7", "path": "<Keyboard>/w", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraKeyboardMove", "isComposite": false, "isPartOfComposite": true },
+                { "name": "down", "id": "8ed2b37f-fcb7-45fc-88f0-d55de674f6f1", "path": "<Keyboard>/s", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraKeyboardMove", "isComposite": false, "isPartOfComposite": true },
+                { "name": "left", "id": "3ac01ced-17db-4e30-9aa2-fbbec1d7995d", "path": "<Keyboard>/a", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraKeyboardMove", "isComposite": false, "isPartOfComposite": true },
+                { "name": "right", "id": "10aecb39-fdeb-40d7-8474-1464e469b669", "path": "<Keyboard>/d", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "CameraKeyboardMove", "isComposite": false, "isPartOfComposite": true }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        { "name": "Keyboard&Mouse", "bindingGroup": "Keyboard&Mouse", "devices": [ { "devicePath": "<Keyboard>", "isOptional": false, "isOR": false }, { "devicePath": "<Mouse>", "isOptional": false, "isOR": false } ] },
+        { "name": "Touch", "bindingGroup": "Touch", "devices": [ { "devicePath": "<Touchscreen>", "isOptional": false, "isOR": false } ] }
+    ]
+}

@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4110731836115601067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f540bc54e8c2a846921f9744ed1af62, type: 3}
+  m_Name: Idle To Patrol
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.StateMachine.Graph.Model.Transition
+  Type: 1
+  Conditions:
+  - {fileID: 2781708656404689287}
+  Actions: []
+  TargetState: {fileID: 7428536309745174903}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc4b8fdc21111840954592ac7ac618f, type: 3}
+  m_Name: ManStateMachineGraph
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.StateMachine.Graph.StateMachineGraph
+  Nodes:
+  - Position: {x: 80, y: 160}
+    State: {fileID: 4946247097128740894}
+  - Position: {x: 420, y: 160}
+    State: {fileID: 7428536309745174903}
+--- !u!114 &1530990078474941103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f540bc54e8c2a846921f9744ed1af62, type: 3}
+  m_Name: Patrol To Idle
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.StateMachine.Graph.Model.Transition
+  Type: 1
+  Conditions:
+  - {fileID: 8210675283389989640}
+  Actions: []
+  TargetState: {fileID: 4946247097128740894}
+--- !u!114 &2781708656404689287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe639628e5466543b0fc57b4a4e5ebf, type: 3}
+  m_Name: Has Patrol Points
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.NPC.StateMachine.ManHasPatrolPointsCondition
+--- !u!114 &3671164087690760542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf2e96d3c27f33b4dadb545807fc945e, type: 3}
+  m_Name: Man Idle Behaviour
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.NPC.StateMachine.ManIdleBehaviour
+--- !u!114 &4059843348920716635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f72bcc5890532e43af0d2e5e5a1587d, type: 3}
+  m_Name: Man Patrol Behaviour
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.NPC.StateMachine.ManPatrolBehaviour
+--- !u!114 &4946247097128740894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b6bf4f9f0a7eb4d9d37ddc9a423a3d, type: 3}
+  m_Name: Man Idle
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.StateMachine.Graph.Model.State
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  Behaviours:
+  - {fileID: 3671164087690760542}
+  Transitions:
+  - {fileID: -4110731836115601067}
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &7428536309745174903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b6bf4f9f0a7eb4d9d37ddc9a423a3d, type: 3}
+  m_Name: Man Patrol
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.StateMachine.Graph.Model.State
+  <Name>k__BackingField:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  Behaviours:
+  - {fileID: 4059843348920716635}
+  Transitions:
+  - {fileID: 1530990078474941103}
+  references:
+    version: 2
+    RefIds: []
+--- !u!114 &8210675283389989640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6252b7ccaf3b7ca49bcc91d7f038ec3b, type: 3}
+  m_Name: Has No Patrol Points
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.NPC.StateMachine.ManHasNoPatrolPointsCondition
