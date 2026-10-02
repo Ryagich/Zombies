@@ -22,8 +22,8 @@ namespace Zombies.NPC
 
         private void CompleteLevel()
         {
-            levelSelection.CompleteCurrentLevel();
             gameModeRequest.Request(GameMode.Victory);
+            levelSelection.CompleteCurrentLevel();
         }
     }
 }

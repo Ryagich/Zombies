@@ -1,3 +1,4 @@
+using MessagePipe;
 using UnityEngine;
 using VContainer.Unity;
 using Zombies.Bootstrap;
@@ -5,6 +6,7 @@ using Zombies.Navigation;
 using Zombies.CameraSystem;
 using Zombies.Input;
 using Zombies.NPC;
+using Zombies.GameModes;
 
 namespace Zombies.Levels
 {
@@ -16,22 +18,30 @@ namespace Zombies.Levels
         private readonly CameraMovementController cameraMovementController;
         private readonly Transform parent;
         private readonly HumansController humansController;
+        private readonly ZombiesController zombiesController;
+        private readonly ISubscriber<GameModeChangedMessage> gameModeChanged;
         private readonly GameLifetimeScope gameScope;
 
         private GameObject currentLevelObject;
+        private System.IDisposable gameModeSubscription;
+        private bool resetPending;
         public LevelController(
             BootCompletion bootCompletion,
             GameNavMeshController navMeshController,
             LevelSelectionState selectionState,
             CameraMovementController cameraMovementController,
             GameLifetimeScope gameScope,
-            HumansController humansController)
+            HumansController humansController,
+            ZombiesController zombiesController,
+            ISubscriber<GameModeChangedMessage> gameModeChanged)
         {
             this.bootCompletion = bootCompletion;
             this.navMeshController = navMeshController;
             this.selectionState = selectionState;
             this.cameraMovementController = cameraMovementController;
             this.humansController = humansController;
+            this.zombiesController = zombiesController;
+            this.gameModeChanged = gameModeChanged;
             this.gameScope = gameScope;
             parent = gameScope.transform;
         }
@@ -41,38 +51,36 @@ namespace Zombies.Levels
             await bootCompletion.WaitAsync();
 
             selectionState.LevelChanged += CreateLevel;
-            selectionState.SelectLastUnlocked();
+            gameModeSubscription = gameModeChanged.Subscribe(OnGameModeChanged);
         }
 
         public void Dispose()
         {
             selectionState.LevelChanged -= CreateLevel;
+            gameModeSubscription?.Dispose();
+            ClearLevel();
+            zombiesController.Clear();
+        }
 
-            if (currentLevelObject != null)
-            {
-                humansController.Clear();
-                // Object.Destroy is deferred until the end of the frame. Hide
-                // the previous level now so it is excluded from the new bake.
-                currentLevelObject.SetActive(false);
-                Object.Destroy(currentLevelObject);
-            }
+        public void ClearCurrentLevel()
+        {
+            ClearLevel();
+            zombiesController.Clear();
         }
 
         private void CreateLevel(LevelDefinition level)
         {
+            if (resetPending)
+                return;
+
             if (level == null || level.LevelPrefab == null)
             {
                 Debug.LogError("Selected level has no level prefab.");
                 return;
             }
 
-            if (currentLevelObject != null)
-            {
-                humansController.Clear();
-                // Destroy is deferred; disable first to exclude it from this bake.
-                currentLevelObject.SetActive(false);
-                Object.Destroy(currentLevelObject);
-            }
+            ClearLevel();
+            zombiesController.Clear();
 
             currentLevelObject = Object.Instantiate(level.LevelPrefab, parent);
             currentLevelObject.name = level.LevelPrefab.name;
@@ -81,6 +89,36 @@ namespace Zombies.Levels
             humansController.SetLevelHumans(people);
             ConfigureCameraBounds(currentLevelObject);
             navMeshController.Rebuild();
+        }
+
+        private void OnGameModeChanged(GameModeChangedMessage message)
+        {
+            switch (message.Mode)
+            {
+                case GameMode.Victory:
+                case GameMode.Defeat:
+                    resetPending = true;
+                    ClearLevel();
+                    zombiesController.Clear();
+                    break;
+                case GameMode.LevelPreview when resetPending:
+                    resetPending = false;
+                    CreateLevel(selectionState.CurrentLevel);
+                    break;
+            }
+        }
+
+        private void ClearLevel()
+        {
+            humansController.Clear();
+            if (currentLevelObject == null)
+                return;
+
+            // Object.Destroy is deferred; disable first so this level cannot
+            // participate in a later navmesh bake.
+            currentLevelObject.SetActive(false);
+            Object.Destroy(currentLevelObject);
+            currentLevelObject = null;
         }
 
         private void BuildHumanScopes(System.Collections.Generic.IReadOnlyList<ManLifetimeScope> people)

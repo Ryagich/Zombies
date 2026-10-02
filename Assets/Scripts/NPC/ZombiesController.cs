@@ -15,6 +15,22 @@ namespace Zombies.NPC
 
         public void Unregister(ZombieLifetimeScope zombie) => zombies.Remove(zombie);
 
+        public void Clear()
+        {
+            foreach (var zombie in new List<ZombieLifetimeScope>(zombies))
+            {
+                if (zombie == null)
+                    continue;
+
+                // Destruction is deferred, so hide the zombie immediately to
+                // prevent it from participating in the next level's navmesh bake.
+                zombie.gameObject.SetActive(false);
+                Object.Destroy(zombie.gameObject);
+            }
+
+            zombies.Clear();
+        }
+
         public ZombieLifetimeScope FindClosestAlive(Vector3 position)
         {
             ZombieLifetimeScope closest = null;

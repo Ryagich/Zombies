@@ -4,23 +4,50 @@ using UnityEngine;
 namespace Zombies.Levels
 {
     /// <summary>
-    /// Shared level selection state. It contains no scene objects, so both the
-    /// game scope and the canvas scope can use it through ProjectLifetimeScope.
+    /// Shared level selection state. Level navigation is constrained to the
+    /// currently selected location.
     /// </summary>
     public sealed class LevelSelectionState
     {
         private readonly LevelCatalogConfig catalog;
-        private int currentIndex = -1;
+        private int currentFlatIndex = -1;
 
         public event Action<LevelDefinition> LevelChanged;
 
-        public LevelDefinition CurrentLevel => currentIndex >= 0 && currentIndex < catalog.Levels.Count
-            ? catalog.Levels[currentIndex]
+        public LevelDefinition CurrentLevel => TryGetEntry(currentFlatIndex, out _, out _, out var level)
+            ? level
             : null;
-        // Level browsing is cyclic: both arrows remain usable whenever the
-        // catalog contains at least two levels.
-        public bool CanSelectPrevious => catalog != null && catalog.Levels != null && catalog.Levels.Count > 1;
-        public bool CanSelectNext => catalog != null && catalog.Levels != null && catalog.Levels.Count > 1;
+
+        /// <summary>Zero-based index of the level inside its location.</summary>
+        public int CurrentLevelIndex => TryGetEntry(currentFlatIndex, out _, out var levelIndex, out _)
+            ? levelIndex
+            : -1;
+
+        public int CurrentLocationIndex => TryGetEntry(currentFlatIndex, out var locationIndex, out _, out _)
+            ? locationIndex
+            : -1;
+
+        public bool CanSelectPrevious => CurrentLocationLevelCount > 1;
+        public bool CanSelectNext => CurrentLocationLevelCount > 1;
+
+        private int CurrentLocationLevelCount => CurrentLocationIndex >= 0
+            ? catalog?.Locations?[CurrentLocationIndex]?.Levels?.Count ?? 0
+            : 0;
+
+        private int LevelCount
+        {
+            get
+            {
+                if (catalog?.Locations == null)
+                    return 0;
+
+                var count = 0;
+                foreach (var location in catalog.Locations)
+                    count += location?.Levels?.Count ?? 0;
+
+                return count;
+            }
+        }
 
         public LevelSelectionState(LevelCatalogConfig catalog)
         {
@@ -29,61 +56,180 @@ namespace Zombies.Levels
 
         public void SelectLastUnlocked()
         {
-            if (catalog == null || catalog.Levels == null)
+            if (LevelCount == 0)
             {
-                Debug.LogError("LevelCatalogConfig is not assigned to ProjectLifetimeScope.");
+                Debug.LogError("LevelCatalogConfig has no levels in its locations.");
                 return;
             }
 
-            var lastUnlockedIndex = catalog.Levels.FindLastIndex(level => level != null && level.IsUnlocked);
-            if (lastUnlockedIndex < 0)
+            for (var index = LevelCount - 1; index >= 0; index--)
             {
-                Debug.LogError("LevelCatalogConfig has no unlocked levels. Unlock at least one level in the catalog.");
-                return;
+                if (TryGetEntry(index, out _, out _, out var level) && level != null && level.IsUnlocked)
+                {
+                    Select(index);
+                    return;
+                }
             }
 
-            Select(lastUnlockedIndex);
+            Debug.LogError("LevelCatalogConfig has no unlocked levels. Unlock at least one level in the catalog.");
+        }
+
+        /// <summary>Returns whether a location contains at least one unlocked level.</summary>
+        public bool HasUnlockedLevel(int locationIndex)
+        {
+            if (locationIndex < 0 || catalog?.Locations == null || locationIndex >= catalog.Locations.Count)
+                return false;
+
+            var levels = catalog.Locations[locationIndex]?.Levels;
+            if (levels == null)
+                return false;
+
+            foreach (var level in levels)
+            {
+                if (level != null && level.IsUnlocked)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>Selects the last unlocked level belonging to a location.</summary>
+        public bool TrySelectLastUnlockedInLocation(int locationIndex)
+        {
+            if (!HasUnlockedLevel(locationIndex))
+                return false;
+
+            var flatIndex = 0;
+            for (var currentLocationIndex = 0; currentLocationIndex < catalog.Locations.Count; currentLocationIndex++)
+            {
+                var levels = catalog.Locations[currentLocationIndex]?.Levels;
+                if (levels == null)
+                    continue;
+
+                if (currentLocationIndex == locationIndex)
+                {
+                    for (var levelIndex = levels.Count - 1; levelIndex >= 0; levelIndex--)
+                    {
+                        var level = levels[levelIndex];
+                        if (level != null && level.IsUnlocked)
+                        {
+                            Select(flatIndex + levelIndex);
+                            return CurrentLocationIndex == locationIndex;
+                        }
+                    }
+                }
+
+                flatIndex += levels.Count;
+            }
+
+            return false;
         }
 
         public void SelectPrevious()
         {
-            if (!CanSelectPrevious || currentIndex < 0)
+            if (!CanSelectPrevious)
                 return;
 
-            Select(currentIndex == 0 ? catalog.Levels.Count - 1 : currentIndex - 1);
+            SelectLevelInCurrentLocation(CurrentLevelIndex == 0
+                ? CurrentLocationLevelCount - 1
+                : CurrentLevelIndex - 1);
         }
 
         public void SelectNext()
         {
-            if (!CanSelectNext || currentIndex < 0)
+            if (!CanSelectNext)
                 return;
 
-            Select(currentIndex == catalog.Levels.Count - 1 ? 0 : currentIndex + 1);
+            SelectLevelInCurrentLocation((CurrentLevelIndex + 1) % CurrentLocationLevelCount);
+        }
+
+        private void SelectLevelInCurrentLocation(int levelIndex)
+        {
+            if (!TryGetFlatIndex(CurrentLocationIndex, levelIndex, out var flatIndex))
+                return;
+
+            Select(flatIndex);
         }
 
         public void CompleteCurrentLevel()
         {
-            if (currentIndex < 0 || catalog == null || catalog.Levels == null)
+            if (currentFlatIndex < 0)
                 return;
 
-            var nextIndex = currentIndex + 1;
-            if (nextIndex < catalog.Levels.Count && catalog.Levels[nextIndex] != null)
-                catalog.Levels[nextIndex].Unlock();
+            if (TryGetEntry(currentFlatIndex + 1, out _, out _, out var nextLevel) && nextLevel != null)
+                nextLevel.Unlock();
 
             LevelChanged?.Invoke(CurrentLevel);
         }
 
-        private void Select(int index)
+        private void Select(int flatIndex)
         {
-            var level = catalog.Levels[index];
-            if (level == null || level.LevelPrefab == null)
+            if (!TryGetEntry(flatIndex, out _, out _, out var level) || level == null || level.LevelPrefab == null)
             {
-                Debug.LogError($"LevelCatalogConfig entry at index {index} has no level prefab.");
+                Debug.LogError($"LevelCatalogConfig entry at index {flatIndex} has no level prefab.");
                 return;
             }
 
-            currentIndex = index;
+            currentFlatIndex = flatIndex;
             LevelChanged?.Invoke(level);
+        }
+
+        private bool TryGetEntry(int flatIndex, out int locationIndex, out int levelIndex, out LevelDefinition level)
+        {
+            locationIndex = -1;
+            levelIndex = -1;
+            level = null;
+
+            if (flatIndex < 0 || catalog?.Locations == null)
+                return false;
+
+            var index = 0;
+            for (var currentLocationIndex = 0; currentLocationIndex < catalog.Locations.Count; currentLocationIndex++)
+            {
+                var location = catalog.Locations[currentLocationIndex];
+                if (location?.Levels == null)
+                    continue;
+
+                for (var currentLevelIndex = 0; currentLevelIndex < location.Levels.Count; currentLevelIndex++)
+                {
+                    if (index++ != flatIndex)
+                        continue;
+
+                    locationIndex = currentLocationIndex;
+                    levelIndex = currentLevelIndex;
+                    level = location.Levels[currentLevelIndex];
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool TryGetFlatIndex(int targetLocationIndex, int targetLevelIndex, out int flatIndex)
+        {
+            flatIndex = -1;
+            if (targetLocationIndex < 0 || targetLevelIndex < 0 || catalog?.Locations == null)
+                return false;
+
+            for (var locationIndex = 0; locationIndex < catalog.Locations.Count; locationIndex++)
+            {
+                var levels = catalog.Locations[locationIndex]?.Levels;
+                if (levels == null)
+                    continue;
+
+                if (locationIndex == targetLocationIndex)
+                {
+                    if (targetLevelIndex >= levels.Count)
+                        return false;
+
+                    flatIndex += targetLevelIndex + 1;
+                    return true;
+                }
+
+                flatIndex += levels.Count;
+            }
+
+            return false;
         }
     }
 }

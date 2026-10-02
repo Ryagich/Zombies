@@ -26,7 +26,13 @@ namespace Zombies.GameModes
 
         public void Start() => SetMode(GameMode.LevelPreview, force: true);
 
-        private void TogglePause() => SetMode(Current == GameMode.Gameplay ? GameMode.Pause : GameMode.Gameplay);
+        private void TogglePause()
+        {
+            if (Current == GameMode.Gameplay)
+                SetMode(GameMode.Pause);
+            else if (Current == GameMode.Pause)
+                SetMode(GameMode.Gameplay);
+        }
 
         private void SetMode(GameMode mode, bool force = false)
         {
@@ -36,7 +42,7 @@ namespace Zombies.GameModes
             }
 
             Current = mode;
-            var gameplay = mode != GameMode.Pause && mode != GameMode.Victory;
+            var gameplay = mode != GameMode.Pause && mode != GameMode.Victory && mode != GameMode.Defeat;
             Time.timeScale = gameplay ? 1f : 0f;
             changedPublisher.Publish(new GameModeChangedMessage(mode));
         }

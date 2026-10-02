@@ -8,9 +8,11 @@ namespace Zombies.UI
         [field: SerializeField] public Canvas CanvasPrefab { get; private set; }
         [field: SerializeField] public RectTransform ContentPrefab { get; private set; }
         [field: SerializeField] public RectTransform MenuPagePrefab { get; private set; }
+        [field: SerializeField] public RectTransform MapPagePrefab { get; private set; }
         [field: SerializeField] public RectTransform LevelPreparationPagePrefab { get; private set; }
         [field: SerializeField] public RectTransform PlayPagePrefab { get; private set; }
         [field: SerializeField] public RectTransform PausePagePrefab { get; private set; }
         [field: SerializeField] public RectTransform VictoryPagePrefab { get; private set; }
+        [field: SerializeField] public RectTransform DefeatPagePrefab { get; private set; }
     }
 }

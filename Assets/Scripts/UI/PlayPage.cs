@@ -2,6 +2,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using Zombies.NPC;
+using Zombies.Levels;
 
 namespace Zombies.UI
 {
@@ -13,17 +14,19 @@ namespace Zombies.UI
         private readonly RectTransform canvasRect;
         private readonly IObjectResolver resolver;
         private readonly HumansController humansController;
+        private readonly LevelTimerController levelTimer;
         private RectTransform pageRoot;
         private PlayPageHolder holder;
 
         public override PageType Type => PageType.Play;
 
-        public PlayPage(UIConfig config, Canvas canvas, IObjectResolver resolver, HumansController humansController)
+        public PlayPage(UIConfig config, Canvas canvas, IObjectResolver resolver, HumansController humansController, LevelTimerController levelTimer)
         {
             this.config = config;
             canvasRect = canvas.GetComponent<RectTransform>();
             this.resolver = resolver;
             this.humansController = humansController;
+            this.levelTimer = levelTimer;
         }
 
         public override void Show()
@@ -39,8 +42,9 @@ namespace Zombies.UI
 
             pageRoot = resolver.Instantiate(config.PlayPagePrefab, canvasRect);
             pageRoot.name = config.PlayPagePrefab.name;
+            UiRaycastUtility.DisableNonInteractiveRaycasts(pageRoot);
             holder = pageRoot.GetComponent<PlayPageHolder>();
-            if (holder == null || holder.PauseButton == null || holder.TitleText == null)
+            if (holder == null || holder.PauseButton == null || holder.TitleText == null || holder.TimeText == null)
             {
                 Debug.LogError("Play Page prefab must contain PlayPageHolder with PauseButton assigned.", pageRoot);
                 return;
@@ -48,7 +52,9 @@ namespace Zombies.UI
 
             holder.PauseButton.onClick.AddListener(OnPauseClicked);
             humansController.PeopleProgressChanged += RefreshPeopleTitle;
+            levelTimer.TimeChanged += RefreshTime;
             RefreshPeopleTitle(humansController.DeadPeopleCount, humansController.TotalPeopleCount);
+            RefreshTime(levelTimer.RemainingSeconds);
         }
 
         public override void Hide()
@@ -60,6 +66,7 @@ namespace Zombies.UI
                 holder.PauseButton.onClick.RemoveListener(OnPauseClicked);
 
             humansController.PeopleProgressChanged -= RefreshPeopleTitle;
+            levelTimer.TimeChanged -= RefreshTime;
 
             holder = null;
             Object.Destroy(pageRoot.gameObject);
@@ -72,6 +79,12 @@ namespace Zombies.UI
         {
             if (holder?.TitleText != null)
                 holder.TitleText.text = $"{current} / {total}";
+        }
+
+        private void RefreshTime(int seconds)
+        {
+            if (holder?.TimeText != null)
+                holder.TimeText.text = LevelTimerController.FormatTime(seconds);
         }
     }
 }

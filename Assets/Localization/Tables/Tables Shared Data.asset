@@ -3849,6 +3849,22 @@ MonoBehaviour:
     m_Key: Victory_Continue
     m_Metadata:
       m_Items: []
+  - m_Id: 5415208450000000
+    m_Key: Defeat_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5415208750000000
+    m_Key: Defeat_Continue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99800000000000001
+    m_Key: Location_Camping_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99800000000000002
+    m_Key: Location_Lakeshore_Name
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

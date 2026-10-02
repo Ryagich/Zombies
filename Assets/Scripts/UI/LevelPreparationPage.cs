@@ -8,6 +8,7 @@ namespace Zombies.UI
     public sealed class LevelPreparationPage : BasePage
     {
         public event System.Action PlayRequested;
+        public event System.Action MapRequested;
 
         private readonly UIConfig config;
         private readonly RectTransform canvasRect;
@@ -41,6 +42,7 @@ namespace Zombies.UI
 
             pageRoot = resolver.Instantiate(config.LevelPreparationPagePrefab, canvasRect);
             pageRoot.name = config.LevelPreparationPagePrefab.name;
+            UiRaycastUtility.DisableNonInteractiveRaycasts(pageRoot);
             holder = pageRoot.GetComponent<LevelPreparationPageHolder>();
             if (holder == null)
             {
@@ -51,6 +53,7 @@ namespace Zombies.UI
             holder.LeftButton.onClick.AddListener(selectionState.SelectPrevious);
             holder.RightButton.onClick.AddListener(selectionState.SelectNext);
             holder.PlayButton.onClick.AddListener(OnPlayClicked);
+            holder.ToMapButton.onClick.AddListener(OnToMapClicked);
             selectionState.LevelChanged += Refresh;
             Refresh(selectionState.CurrentLevel);
         }
@@ -67,6 +70,7 @@ namespace Zombies.UI
                 holder.LeftButton.onClick.RemoveListener(selectionState.SelectPrevious);
                 holder.RightButton.onClick.RemoveListener(selectionState.SelectNext);
                 holder.PlayButton.onClick.RemoveListener(OnPlayClicked);
+                holder.ToMapButton.onClick.RemoveListener(OnToMapClicked);
                 holder = null;
             }
 
@@ -82,8 +86,13 @@ namespace Zombies.UI
                 return;
             }
 
-            holder.TitleText.text = level?.LevelName.GetLocalizedString() ?? string.Empty;
+            holder.TitleText.text = level != null
+                && selectionState.CurrentLocationIndex >= 0
+                && selectionState.CurrentLevelIndex >= 0
+                ? $"{selectionState.CurrentLocationIndex + 1}-{selectionState.CurrentLevelIndex + 1}"
+                : string.Empty;
             holder.PeopleText.text = level?.LevelPrefab?.GetComponent<LevelHumansRegistry>()?.PeopleCount.ToString() ?? "0";
+            holder.TimeText.text = LevelTimerController.FormatTime(level?.CompletionTimeSeconds ?? 0);
             holder.LeftButton.interactable = selectionState.CanSelectPrevious;
             holder.RightButton.interactable = selectionState.CanSelectNext;
             var isUnlocked = level != null && level.IsUnlocked;
@@ -92,5 +101,6 @@ namespace Zombies.UI
         }
 
         private void OnPlayClicked() => PlayRequested?.Invoke();
+        private void OnToMapClicked() => MapRequested?.Invoke();
     }
 }

@@ -51,3 +51,4 @@ MonoBehaviour:
   canvasScopePrefab: {fileID: 5333598251534650424, guid: c408dc9d1eba8754ab4b86a9c75d45ae, type: 3}
   navMeshSurfacePrefab: {fileID: 4439473121583723755, guid: 06c60b2d99e873747a458510eca75458, type: 3}
   zombiePrefab: {fileID: 7552752289366009117, guid: 6bdc20a2ab134034f9eefadb0bf46fb1, type: 3}
+  mapPrefab: {fileID: 102475605691129082, guid: fff0896ab34aa9f469fa771a28fba581, type: 3}

@@ -35,6 +35,7 @@ namespace Zombies.UI
 
             pageRoot = resolver.Instantiate(config.VictoryPagePrefab, canvasRect);
             pageRoot.name = config.VictoryPagePrefab.name;
+            UiRaycastUtility.DisableNonInteractiveRaycasts(pageRoot);
             holder = pageRoot.GetComponent<PausePageHolder>();
             if (holder == null || holder.ResumeButton == null)
             {

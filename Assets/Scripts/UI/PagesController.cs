@@ -1,45 +1,65 @@
 using VContainer.Unity;
 using MessagePipe;
 using Zombies.GameModes;
+using Zombies.Levels;
 
 namespace Zombies.UI
 {
     public sealed class PagesController : IStartable, System.IDisposable
     {
+        private readonly MapPage mapPage;
         private readonly LevelPreparationPage levelPreparationPage;
         private readonly PlayPage playPage;
         private readonly PausePage pausePage;
         private readonly VictoryPage victoryPage;
+        private readonly DefeatPage defeatPage;
+        private readonly MapController mapController;
+        private readonly LevelController levelController;
         private readonly GameModeRequestService gameModeRequestService;
         private BasePage currentPage;
 
-        public PagesController(LevelPreparationPage levelPreparationPage, PlayPage playPage, PausePage pausePage, VictoryPage victoryPage,
-            GameModeRequestService gameModeRequestService, ISubscriber<GameModeChangedMessage> gameModeChanged)
+        public PagesController(MapPage mapPage, LevelPreparationPage levelPreparationPage, PlayPage playPage, PausePage pausePage, VictoryPage victoryPage,
+            DefeatPage defeatPage,
+            MapController mapController,
+            LevelController levelController,
+            GameModeRequestService gameModeRequestService, ISubscriber<GameModeChangedMessage> gameModeChanged,
+            ISubscriber<LocationSelectedMessage> locationSelected)
         {
+            this.mapPage = mapPage;
             this.levelPreparationPage = levelPreparationPage;
             this.playPage = playPage;
             this.pausePage = pausePage;
             this.victoryPage = victoryPage;
+            this.defeatPage = defeatPage;
+            this.mapController = mapController;
+            this.levelController = levelController;
             this.gameModeRequestService = gameModeRequestService;
             levelPreparationPage.PlayRequested += ShowPlayPage;
+            levelPreparationPage.MapRequested += ShowMap;
             playPage.PauseRequested += ShowPausePage;
             pausePage.ResumeRequested += ShowPlayPage;
             victoryPage.ContinueRequested += ShowLevelPreparationPage;
+            defeatPage.ContinueRequested += ShowLevelPreparationPage;
             gameModeChanged.Subscribe(message =>
             {
                 if (message.Mode == GameMode.Victory)
                     Show(PageType.Victory);
+                else if (message.Mode == GameMode.Defeat)
+                    Show(PageType.Defeat);
             });
+            locationSelected.Subscribe(_ => ShowLevelPreparationPage());
         }
 
-        public void Start() => Show(PageType.LevelPreparation);
+        public void Start() => Show(PageType.Map);
 
         public void Dispose()
         {
             levelPreparationPage.PlayRequested -= ShowPlayPage;
+            levelPreparationPage.MapRequested -= ShowMap;
             playPage.PauseRequested -= ShowPausePage;
             pausePage.ResumeRequested -= ShowPlayPage;
             victoryPage.ContinueRequested -= ShowLevelPreparationPage;
+            defeatPage.ContinueRequested -= ShowLevelPreparationPage;
             currentPage?.Hide();
         }
 
@@ -60,11 +80,13 @@ namespace Zombies.UI
         {
             return type switch
             {
+                PageType.Map => mapPage,
                 PageType.LevelPreparation => levelPreparationPage,
                 PageType.Play => playPage,
                 PageType.Pause => pausePage,
                 PageType.Victory => victoryPage,
-                _ => levelPreparationPage
+                PageType.Defeat => defeatPage,
+                _ => mapPage
             };
         }
 
@@ -84,6 +106,13 @@ namespace Zombies.UI
         {
             Show(PageType.LevelPreparation);
             gameModeRequestService.Request(GameMode.LevelPreview);
+        }
+
+        private void ShowMap()
+        {
+            levelController.ClearCurrentLevel();
+            mapController.ShowMap();
+            Show(PageType.Map);
         }
     }
 }

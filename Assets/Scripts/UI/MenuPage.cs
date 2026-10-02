@@ -38,6 +38,7 @@ namespace Zombies.UI
 
             pageRoot = resolver.Instantiate(config.MenuPagePrefab, canvasRect);
             pageRoot.name = config.MenuPagePrefab.name;
+            UiRaycastUtility.DisableNonInteractiveRaycasts(pageRoot);
             pageRoot.gameObject.AddComponent<MenuPageVisibility>();
 
             playButton = FindPlayButton(pageRoot);

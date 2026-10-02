@@ -6346,7 +6346,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 99500000000000001
-    m_Localized: YOU DIED
+    m_Localized: DEFEAT
     m_Metadata:
       m_Items: []
   - m_Id: 99500000000000002
@@ -6403,6 +6403,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5415208146458624
     m_Localized: CONTINUE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5415208450000000
+    m_Localized: TIME'S UP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5415208750000000
+    m_Localized: CONTINUE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99800000000000001
+    m_Localized: Holiday Camp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99800000000000002
+    m_Localized: Lakeshore
     m_Metadata:
       m_Items: []
   references:

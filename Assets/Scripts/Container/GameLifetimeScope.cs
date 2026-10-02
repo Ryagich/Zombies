@@ -14,11 +14,13 @@ public class GameLifetimeScope : LifetimeScope
     [SerializeField] private CanvasLifetimeScope canvasScopePrefab;
     [SerializeField] private NavMeshSurface navMeshSurfacePrefab;
     [SerializeField] private GameObject zombiePrefab;
+    [SerializeField] private GameObject mapPrefab;
     private Camera gameCamera;
 
     public void SetGameCamera(Camera camera) => gameCamera = camera;
     public NavMeshSurface NavMeshSurfacePrefab => navMeshSurfacePrefab;
     public GameObject ZombiePrefab => zombiePrefab;
+    public GameObject MapPrefab => mapPrefab;
 
     protected override void Configure(IContainerBuilder builder)
     {
@@ -30,6 +32,8 @@ public class GameLifetimeScope : LifetimeScope
         builder.RegisterMessageBroker<CameraDragMoveMessage>(options);
         builder.RegisterMessageBroker<CameraKeyboardMoveMessage>(options);
         builder.RegisterMessageBroker<GroundClickedMessage>(options);
+        builder.RegisterMessageBroker<LocationSelectedMessage>(options);
+        builder.RegisterMessageBroker<LocationHoverMessage>(options);
         if (gameCamera == null)
         {
             Debug.LogError("Game camera is not assigned to GameLifetimeScope.", this);
@@ -46,7 +50,9 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<HumansController>(Lifetime.Singleton).AsSelf();
         builder.Register<ZombiesController>(Lifetime.Singleton).AsSelf();
         builder.RegisterEntryPoint<LevelCompletionController>(Lifetime.Singleton);
-        builder.RegisterEntryPoint<LevelController>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<MapController>(Lifetime.Singleton).AsSelf();
+        builder.RegisterEntryPoint<LevelController>(Lifetime.Singleton).AsSelf();
+        builder.RegisterEntryPoint<LevelTimerController>(Lifetime.Singleton).AsSelf();
         builder.RegisterEntryPoint<GroundClickZombieSpawner>(Lifetime.Singleton);
     }
 

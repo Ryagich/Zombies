@@ -12,29 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9299e1edbeb36fe4bb7958842014f2d4, type: 3}
   m_Name: LevelCatalogConfig
   m_EditorClassIdentifier: Assembly-CSharp::Zombies.Levels.LevelCatalogConfig
-  <Levels>k__BackingField:
-  - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 218cb12fe00355e4fbc5c085a4824f2f, type: 3}
-    <IsUnlocked>k__BackingField: 1
-    <LevelName>k__BackingField:
+  <Locations>k__BackingField:
+  - <LocationName>k__BackingField:
       m_TableReference:
         m_TableCollectionName: Tables
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: Level_1_Name
+        m_Key: Location_Camping_Name
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
-  - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 8c11e4166612ec94cb0869820a3c7a85, type: 3}
-    <IsUnlocked>k__BackingField: 0
-    <LevelName>k__BackingField:
+    <Levels>k__BackingField:
+    - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 218cb12fe00355e4fbc5c085a4824f2f, type: 3}
+      <IsUnlocked>k__BackingField: 1
+      <CompletionTimeSeconds>k__BackingField: 2
+    - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 8c11e4166612ec94cb0869820a3c7a85, type: 3}
+      <IsUnlocked>k__BackingField: 0
+      <CompletionTimeSeconds>k__BackingField: 300
+  - <LocationName>k__BackingField:
       m_TableReference:
         m_TableCollectionName: Tables
       m_TableEntryReference:
         m_KeyId: 0
-        m_Key: Level_2_Name
+        m_Key: Location_Lakeshore_Name
       m_FallbackState: 0
       m_WaitForCompletion: 0
       m_LocalVariables: []
+    <Levels>k__BackingField:
+    - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 218cb12fe00355e4fbc5c085a4824f2f, type: 3}
+      <IsUnlocked>k__BackingField: 0
+      <CompletionTimeSeconds>k__BackingField: 2
+    - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 8c11e4166612ec94cb0869820a3c7a85, type: 3}
+      <IsUnlocked>k__BackingField: 0
+      <CompletionTimeSeconds>k__BackingField: 300
   references:
     version: 2
     RefIds: []

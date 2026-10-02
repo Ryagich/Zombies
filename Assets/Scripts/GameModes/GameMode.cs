@@ -6,5 +6,6 @@ namespace Zombies.GameModes
         Gameplay,
         Pause,
         Victory,
+        Defeat,
     }
 }
