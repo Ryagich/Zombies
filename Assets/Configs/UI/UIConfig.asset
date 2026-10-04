@@ -21,3 +21,5 @@ MonoBehaviour:
   <PausePagePrefab>k__BackingField: {fileID: 1204485311920450337, guid: 11130bf00a9af6e47a3083327975aa08, type: 3}
   <VictoryPagePrefab>k__BackingField: {fileID: 1204485311920450337, guid: 3cf2fb1f4c89c7e4cb7e6b6b05d9bc89, type: 3}
   <DefeatPagePrefab>k__BackingField: {fileID: 1204485311920450337, guid: f35c5595f19b3264a96ed4c476490b2e, type: 3}
+  <ZombieCardPrefab>k__BackingField: {fileID: 1199000000000000001, guid: bdd712fe6731d034a85be7540b84798c, type: 3}
+  <ZombieRowPrefab>k__BackingField: {fileID: 4430230652254696902, guid: bc657bc48246027479ba2c34a28995ff, type: 3}

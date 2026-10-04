@@ -54,3 +54,5 @@ MonoBehaviour:
   <CameraMovementConfig>k__BackingField: {fileID: 11400000, guid: 533f8839e03f29d4f9c93ce488629ad7, type: 2}
   <LevelCatalogConfig>k__BackingField: {fileID: 11400000, guid: 5c9d5228344e58f4d96399b392d05555, type: 2}
   <MapInteractionConfig>k__BackingField: {fileID: 11400000, guid: b8f5299ae216c4748ab55802e1442f6d, type: 2}
+  <BrainConfig>k__BackingField: {fileID: 11400000, guid: d006d23e0aa582f4d97f1983f35821a4, type: 2}
+  <ZombieStorage>k__BackingField: {fileID: 11400000, guid: bd24d650b4cfb33488cecf0a0af77217, type: 2}

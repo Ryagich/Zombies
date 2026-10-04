@@ -1,5 +1,6 @@
 using System;
 using MessagePipe;
+using UnityEngine;
 using VContainer.Unity;
 using Zombies.GameModes;
 
@@ -24,10 +25,12 @@ namespace Zombies.Levels
 
         public int RemainingSeconds => remainingSeconds;
 
-        public LevelTimerController(
-            LevelSelectionState selectionState,
-            GameModeRequestService gameModeRequest,
-            ISubscriber<GameModeChangedMessage> gameModeChanged)
+        public LevelTimerController
+            (
+                LevelSelectionState selectionState,
+                GameModeRequestService gameModeRequest,
+                ISubscriber<GameModeChangedMessage> gameModeChanged
+            )
         {
             this.selectionState = selectionState;
             this.gameModeRequest = gameModeRequest;
@@ -40,14 +43,14 @@ namespace Zombies.Levels
             ResetTimer();
         }
 
-        public void Dispose() => gameModeSubscription?.Dispose();
-
         public void Tick()
         {
             if (!isRunning)
+            {
                 return;
-
-            accumulatedSeconds += UnityEngine.Time.deltaTime;
+            }
+            accumulatedSeconds += Time.deltaTime;
+            
             while (accumulatedSeconds >= 1f && isRunning)
             {
                 accumulatedSeconds -= 1f;
@@ -55,8 +58,9 @@ namespace Zombies.Levels
                 TimeChanged?.Invoke(remainingSeconds);
 
                 if (remainingSeconds != 0)
+                {
                     continue;
-
+                }
                 isRunning = false;
                 gameModeRequest.Request(GameMode.Defeat);
             }
@@ -99,5 +103,7 @@ namespace Zombies.Levels
                 ?? LevelDefinition.DefaultCompletionTimeSeconds;
             TimeChanged?.Invoke(remainingSeconds);
         }
+
+        public void Dispose() => gameModeSubscription?.Dispose();
     }
 }

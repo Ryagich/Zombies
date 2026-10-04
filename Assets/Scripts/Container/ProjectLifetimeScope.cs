@@ -7,6 +7,7 @@ using Zombies.Loading;
 using Zombies.Input;
 using Zombies.Levels;
 using Zombies.GameModes;
+using Zombies.NPC;
 
 public class ProjectLifetimeScope : LifetimeScope
 {
@@ -18,6 +19,8 @@ public class ProjectLifetimeScope : LifetimeScope
     [field: SerializeField] public CameraMovementConfig CameraMovementConfig { get; private set; }
     [field: SerializeField] public LevelCatalogConfig LevelCatalogConfig { get; private set; }
     [field: SerializeField] public MapInteractionConfig MapInteractionConfig { get; private set; }
+    [field: SerializeField] public BrainConfig BrainConfig { get; private set; }
+    [field: SerializeField] public ZombieStorage ZombieStorage { get; private set; }
 
     protected override void Awake()
     {
@@ -50,6 +53,8 @@ public class ProjectLifetimeScope : LifetimeScope
             builder.RegisterInstance(CameraMovementConfig).AsSelf();
             builder.RegisterInstance(LevelCatalogConfig).AsSelf();
             builder.RegisterInstance(MapInteractionConfig).AsSelf();
+            builder.RegisterInstance(BrainConfig).AsSelf();
+            builder.RegisterInstance(ZombieStorage).AsSelf();
             builder.Register<LevelSelectionState>(Lifetime.Singleton);
             if (UIConfig == null || UIConfig.CanvasPrefab == null)
             {

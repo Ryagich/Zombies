@@ -8,12 +8,14 @@ namespace Zombies.NPC
     {
         private readonly GameLifetimeScope gameScope;
         private readonly ISubscriber<Zombies.Input.GroundClickedMessage> subscriber;
+        private readonly ZombieSelectionController selection;
         private System.IDisposable subscription;
 
-        public GroundClickZombieSpawner(GameLifetimeScope gameScope, ISubscriber<Zombies.Input.GroundClickedMessage> subscriber)
+        public GroundClickZombieSpawner(GameLifetimeScope gameScope, ISubscriber<Zombies.Input.GroundClickedMessage> subscriber, ZombieSelectionController selection)
         {
             this.gameScope = gameScope;
             this.subscriber = subscriber;
+            this.selection = selection;
         }
 
         public void Start() => subscription = subscriber.Subscribe(message => Spawn(message.Position));
@@ -21,12 +23,16 @@ namespace Zombies.NPC
 
         private void Spawn(Vector3 position)
         {
-            if (gameScope.ZombiePrefab == null)
+            if (selection.SelectedConfig == null || !selection.TryConsumeSelected())
+                return;
+
+            var zombiePrefab = selection.SelectedConfig.ZombiePrefab;
+            if (zombiePrefab == null)
             {
-                Debug.LogError("Zombie prefab is not assigned to GameLifetimeScope.");
+                Debug.LogError("Selected ZombieConfig has no zombie prefab.");
                 return;
             }
-            var zombie = Object.Instantiate(gameScope.ZombiePrefab, position, Quaternion.identity, gameScope.transform);
+            var zombie = Object.Instantiate(zombiePrefab, position, Quaternion.identity, gameScope.transform);
             var scope = zombie.GetComponent<ZombieLifetimeScope>();
             if (scope == null)
             {

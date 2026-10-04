@@ -49,6 +49,8 @@ public class GameLifetimeScope : LifetimeScope
         builder.Register<GameNavMeshController>(Lifetime.Singleton);
         builder.Register<HumansController>(Lifetime.Singleton).AsSelf();
         builder.Register<ZombiesController>(Lifetime.Singleton).AsSelf();
+        builder.RegisterEntryPoint<BrainController>(Lifetime.Singleton).AsSelf();
+        builder.RegisterEntryPoint<ZombieSelectionController>(Lifetime.Singleton).AsSelf();
         builder.RegisterEntryPoint<LevelCompletionController>(Lifetime.Singleton);
         builder.RegisterEntryPoint<MapController>(Lifetime.Singleton).AsSelf();
         builder.RegisterEntryPoint<LevelController>(Lifetime.Singleton).AsSelf();

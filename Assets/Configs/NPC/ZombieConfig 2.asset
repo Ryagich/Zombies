@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e754c541a000944b18c49cec65e59a, type: 3}
+  m_Name: ZombieConfig 2
+  m_EditorClassIdentifier: Assembly-CSharp::Zombies.NPC.ZombieConfig
+  <BrainCost>k__BackingField: 5
+  <SpawnCooldown>k__BackingField: 2
+  <ZombiePrefab>k__BackingField: {fileID: 7552752289366009117, guid: dbb5d76c62bf1b144be338fe0e94ea10, type: 3}
+  <Icon>k__BackingField: {fileID: 0}

@@ -14,5 +14,7 @@ namespace Zombies.UI
         [field: SerializeField] public RectTransform PausePagePrefab { get; private set; }
         [field: SerializeField] public RectTransform VictoryPagePrefab { get; private set; }
         [field: SerializeField] public RectTransform DefeatPagePrefab { get; private set; }
+        [field: SerializeField] public ZombieCard ZombieCardPrefab { get; private set; }
+        [field: SerializeField] public RectTransform ZombieRowPrefab { get; private set; }
     }
 }

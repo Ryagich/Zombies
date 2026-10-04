@@ -25,9 +25,9 @@ MonoBehaviour:
     <Levels>k__BackingField:
     - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 218cb12fe00355e4fbc5c085a4824f2f, type: 3}
       <IsUnlocked>k__BackingField: 1
-      <CompletionTimeSeconds>k__BackingField: 2
+      <CompletionTimeSeconds>k__BackingField: 30
     - <LevelPrefab>k__BackingField: {fileID: 102475605691129082, guid: 8c11e4166612ec94cb0869820a3c7a85, type: 3}
-      <IsUnlocked>k__BackingField: 0
+      <IsUnlocked>k__BackingField: 1
       <CompletionTimeSeconds>k__BackingField: 300
   - <LocationName>k__BackingField:
       m_TableReference:
